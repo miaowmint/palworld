@@ -24,7 +24,7 @@ else
     echo "curl 已安装"
 fi
 
-mkdir -p /usr/local/sh && curl -o /usr/local/sh/palworld.sh https://mirror.ghproxy.com/https://raw.githubusercontent.com/miaowmint/palworld/main/palworld.sh
+mkdir -p /usr/local/sh && curl -o /usr/local/sh/palworld.sh https://raw.githubusercontent.com/miaowmint/palworld/main/palworld.sh
 
 ln -s /usr/local/sh/palworld.sh /usr/local/bin/palworld && chmod +x /usr/local/bin/palworld
 
