@@ -54,6 +54,7 @@ install_pal_server(){
         echo -e "${Green}开始安装幻兽帕鲁服务端...${Font}"
         docker run -dit --name steamcmd --net host miaowmint/palworld
         echo -e "${Green}幻兽帕鲁服务端已成功安装并启动！${Font}"
+        echo -e "${Red}如果需要唤起此脚本，只需要在命令行输入 palworld 即可{Font}"
     fi
 }
 
@@ -220,7 +221,6 @@ ovz_no
 install_docker
 clear
 echo -e "———————————————————————————————————————"
-echo -e "${Green}Linux VPS一键安装管理幻兽帕鲁服务端脚本${Font}"
 echo -e "${Green}1、安装幻兽帕鲁服务端${Font}"
 echo -e "${Green}2、启动幻兽帕鲁服务端${Font}"
 echo -e "${Green}3、停止幻兽帕鲁服务端${Font}"
