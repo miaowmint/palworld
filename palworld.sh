@@ -95,7 +95,9 @@ modify_config(){
             echo -e "${Green}开始修改服务端配置...${Font}"
             docker cp /data/palworld/PalWorldSettings.ini steamcmd:/home/steam/Steam/steamapps/common/PalServer/Pal/Saved/Config/LinuxServer/
             echo -e "${Green}服务端配置已成功修改！服务端重启后生效！${Font}"
-            restart_pal_server
+            echo -e "${Green}开始重启幻兽帕鲁服务端...${Font}"
+            docker restart steamcmd
+            echo -e "${Green}幻兽帕鲁服务端已成功重启！${Font}"
         else
             echo -e "${Red}未找到服务端配置文件，请前往 https://www.xuehaiwu.com/Pal/ 进行配置。${Font}"
         fi
@@ -185,7 +187,9 @@ import_pal_server(){
         read -p "请将幻兽帕鲁存档及配置(Saved)文件夹放入 /data/palworld 目录，然后回车继续" import
         echo -e "${Green}开始导入幻兽帕鲁存档及配置...${Font}"
         docker cp /data/palworld/Saved/ steamcmd:/home/steam/Steam/steamapps/common/PalServer/Pal/
-        restart_pal_server
+        echo -e "${Green}开始重启幻兽帕鲁服务端...${Font}"
+        docker restart steamcmd
+        echo -e "${Green}幻兽帕鲁服务端已成功重启！${Font}"
         echo -e "${Green}幻兽帕鲁存档及配置已成功导入！${Font}"
     else
         echo -e "${Red}幻兽帕鲁服务端不存在，导入失败！${Font}"
@@ -213,7 +217,7 @@ root_need
 ovz_no
 install_docker
 clear
-echo -e "———————————————————————————————————————"
+echo -e "———————————————————————————————————————v20230125190000"
 echo -e "${Red}由于此脚本为赶工做出的，如发现脚本有任何bug或逻辑问题或改进方案，请发邮件到 cat@acat.email 联系我${Font}"
 echo -e "———————————————————————————————————————"
 echo -e "${Red}后续管理幻兽帕鲁服务端，只需要在命令行输入\033[32m palworld \033[0m即可${Font}"
@@ -225,7 +229,7 @@ echo -e "${Green}4、修改服务端配置${Font}"
 echo -e "${Green}5、增加swap内存${Font}"
 echo -e "${Green}6、增加定时重启${Font}"
 echo -e "${Green}7、重启幻兽帕鲁服务端${Font}"
-echo -e "${Green}8、导入幻兽帕鲁存档及配置（有BUG！暂时先不要用,请先不要随意删除容器）${Font}"
+echo -e "${Green}8、导入幻兽帕鲁存档及配置${Font}"
 echo -e "${Green}9、导出幻兽帕鲁存档及配置${Font}"
 echo -e "${Green}10、查看幻兽帕鲁服务端状态${Font}"
 echo -e "${Green}11、删除幻兽帕鲁服务端${Font}"
