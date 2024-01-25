@@ -1,6 +1,10 @@
-#!/bin/bash                                                  '
+#!/bin/bash
 
-echo -e "${Red}由于此脚本为赶工做出的，如发现脚本有任何bug或逻辑问题或改进方案，请发邮件到 cat@acat.email 联系我${Font}"
+
+#  _ __ ___ (_) __ _  _____      ___ __ ___ (_)_ __ | |_ 
+# | '_ ` _ \| |/ _` |/ _ \ \ /\ / / '_ ` _ \| | '_ \| __|
+# | | | | | | | (_| | (_) \ V  V /| | | | | | | | | | |_ 
+# |_| |_| |_|_|\__,_|\___/ \_/\_/ |_| |_| |_|_|_| |_|\__|
 
 Green="\033[32m"
 Font="\033[0m"
@@ -41,7 +45,6 @@ install_pal_server(){
         echo -e "${Green}开始安装幻兽帕鲁服务端...${Font}"
         docker run -dit --name steamcmd --net host miaowmint/palworld
         echo -e "${Green}幻兽帕鲁服务端已成功安装并启动！${Font}"
-        echo -e "${Red}如果需要唤起此脚本，只需要在命令行输入 palworld 即可{Font}"
     fi
 }
 
@@ -86,10 +89,12 @@ modify_config(){
         read -p "例如配置文件URL为 https://www.xuehaiwu.com/Pal/configs/config_1706097640.txt ，则输入1706097640" iniid
         if [ -n "$iniid" ]; then
             curl -o /data/palworld/PalWorldSettings.ini https://www.xuehaiwu.com/Pal/configs/config_${iniid}.txt
+        fi
         if [ -f /data/palworld/PalWorldSettings.ini ]; then
             echo -e "${Green}开始修改服务端配置...${Font}"
             docker cp /data/palworld/PalWorldSettings.ini steamcmd:/home/steam/Steam/steamapps/common/PalServer/Pal/Saved/Config/LinuxServer/
             echo -e "${Green}服务端配置已成功修改！服务端重启后生效！${Font}"
+            restart_pal_server
         else
             echo -e "${Red}未找到服务端配置文件，请前往 https://www.xuehaiwu.com/Pal/ 进行配置。${Font}"
         fi
@@ -207,6 +212,10 @@ root_need
 ovz_no
 install_docker
 clear
+echo -e "———————————————————————————————————————"
+echo -e "${Red}由于此脚本为赶工做出的，如发现脚本有任何bug或逻辑问题或改进方案，请发邮件到 cat@acat.email 联系我${Font}"
+echo -e "———————————————————————————————————————"
+echo -e "${Red}如果需要重新唤起此脚本，只需要在命令行输入 palworld 即可${Font}"
 echo -e "———————————————————————————————————————"
 echo -e "${Green}1、安装幻兽帕鲁服务端${Font}"
 echo -e "${Green}2、启动幻兽帕鲁服务端${Font}"
