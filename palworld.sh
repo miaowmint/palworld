@@ -32,7 +32,7 @@ install_docker(){
         echo -e "${Green}Docker 已安装，进行下一步.${Font}"
     else
         echo -e "${Green}Docker 未安装，正在为您安装...${Font}"
-        curl -fsSL https://get.docker.com | bash -s docker
+        curl -fsSL https://get.docker.com | bash -s docker 
         echo -e "${Green}Docker 安装成功！${Font}"
     fi
 }
@@ -228,9 +228,12 @@ update_in_container(){
             echo -e "${Green}开始更新...${Font}"
             docker exec -it steamcmd bash -c "/home/steam/steamcmd/steamcmd.sh +login anonymous +app\_update 2394010 validate +quit"
             if [ $? -eq 0 ]; then
+                echo -e "${Green}开始重启幻兽帕鲁服务端...${Font}"
+                docker restart steamcmd
+                echo -e "${Green}幻兽帕鲁服务端已成功重启！${Font}"
                 echo "更新应该是成功了，如果有问题请到腾讯云社区的文章评论下反馈 https://cloud.tencent.com/developer/article/2383539 "
             else
-                echo "更新可能失败了，如果是网络的原因就重试一次，如果是其他问题请到腾讯云社区的文章评论下反馈 https://cloud.tencent.com/developer/article/2383539 "
+                echo "更新可能失败了，如果是网络的原因（出现Timeout字样）就重试一次，如果是其他问题请到腾讯云社区的文章评论下反馈 https://cloud.tencent.com/developer/article/2383539 "
             fi
         fi
     else
@@ -276,7 +279,7 @@ root_need
 ovz_no
 install_docker
 clear
-echo -e "———————————————————————————————————————v20230125_220222"
+echo -e "———————————————————————————————————————v20230125_220715"
 echo -e "${Red}由于此脚本为赶工做出的，如发现脚本有任何bug或逻辑问题或改进方案，请发邮件到 cat@acat.email 联系我${Font}"
 echo -e "———————————————————————————————————————"
 echo -e "${Red}除非需要更新管理脚本，否则后续管理幻兽帕鲁服务端，只需要在命令行输入\033[32m palworld \033[0m即可${Font}"
@@ -294,7 +297,7 @@ echo -e "${Green}10、查看幻兽帕鲁服务端状态${Font}"
 echo -e "${Green}11、删除幻兽帕鲁服务端${Font}"
 echo -e "${Green}12、在容器内直接更新${Font}"
 echo -e "${Green}13、使用watchtower更新镜像的方式更新${Font}"
-echo -e "${Green}tips: 12 13任选其一即可，可能存在未知的bug，如遇到请反馈；通过 12 更新可能会遇到网络不好的问题；通过13更新可能由于会导出导入存档遇到未知的bug${Font}"
+echo -e "${Green}tips: 12 13任选其一即可，可能存在未知的bug，如遇到请反馈；通过 12 更新非常可能会遇到网络不好的问题；通过13更新可能由于会导出导入存档遇到未知的bug${Font}"
 echo -e "———————————————————————————————————————"
 read -p "请输入数字 [1-13]:" num
 case "$num" in
