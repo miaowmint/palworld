@@ -214,7 +214,7 @@ export_pal_server(){
 #在容器内更新
 update_in_container(){
     if [ $(docker ps -a -q -f name=steamcmd) ]; then
-        readread -p "请注意，此操作会自动进行存档备份，会覆盖之前导出的存档，按回车键继续，输入任何内容退出脚本: " continue_update
+        read -p "请注意，此操作会自动进行存档备份，会覆盖之前导出的存档，按回车键继续，输入任何内容退出脚本: " continue_update
         if [ -n "$continue_update" ]; then
             echo "退出脚本"
             exit
@@ -241,7 +241,7 @@ update_in_container(){
 #使用watchtower更新
 update_with_watchtower(){
      if [ $(docker ps -a -q -f name=steamcmd) ]; then
-        readread -p "请注意，此操作会自动进行存档备份，会覆盖之前导出的存档，按回车键继续，输入任何内容退出脚本: " continue_update2
+        read -p "请注意，此操作会自动进行存档备份，会覆盖之前导出的存档，按回车键继续，输入任何内容退出脚本: " continue_update2
         if [ -n "$continue_update2" ]; then
             echo "退出脚本"
             exit
@@ -276,7 +276,7 @@ root_need
 ovz_no
 install_docker
 clear
-echo -e "———————————————————————————————————————v20230125215010"
+echo -e "———————————————————————————————————————v20230125_220222"
 echo -e "${Red}由于此脚本为赶工做出的，如发现脚本有任何bug或逻辑问题或改进方案，请发邮件到 cat@acat.email 联系我${Font}"
 echo -e "———————————————————————————————————————"
 echo -e "${Red}除非需要更新管理脚本，否则后续管理幻兽帕鲁服务端，只需要在命令行输入\033[32m palworld \033[0m即可${Font}"
