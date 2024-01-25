@@ -32,7 +32,7 @@ install_docker(){
         echo -e "${Green}Docker 已安装，进行下一步.${Font}"
     else
         echo -e "${Green}Docker 未安装，正在为您安装...${Font}"
-        curl -fsSL https://get.docker.com | bash -s docker 
+        curl -fsSL https://get.docker.com | bash -s docker
         echo -e "${Green}Docker 安装成功！${Font}"
     fi
 }
@@ -292,8 +292,8 @@ echo -e "${Green}8、导入幻兽帕鲁存档及配置${Font}"
 echo -e "${Green}9、导出幻兽帕鲁存档及配置${Font}"
 echo -e "${Green}10、查看幻兽帕鲁服务端状态${Font}"
 echo -e "${Green}11、删除幻兽帕鲁服务端${Font}"
-echo -e "${Green}12、查看幻兽帕鲁服务端状态${Font}"
-echo -e "${Green}13、删除幻兽帕鲁服务端${Font}"
+echo -e "${Green}12、在容器内直接更新 （12 13选一个即可，可能存在未知的bug，如遇到请反馈）${Font}"
+echo -e "${Green}13、使用watchtower更新镜像的方式更新${Font}"
 echo -e "———————————————————————————————————————"
 read -p "请输入数字 [1-13]:" num
 case "$num" in
