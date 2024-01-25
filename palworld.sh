@@ -183,7 +183,7 @@ import_pal_server(){
     if [ $(docker ps -a -q -f name=steamcmd) ]; then
         read -p "请将幻兽帕鲁存档及配置文件放入 /data/palworld 目录" import
         echo -e "${Green}开始导入幻兽帕鲁存档及配置...${Font}"
-        docker cp /data/palworld/Saved/. steamcmd:/home/steam/Steam/steamapps/common/PalServer/Pal/Saved 
+        docker cp /data/palworld/Saved/ steamcmd:/home/steam/Steam/steamapps/common/PalServer/Pal/Saved/ 
         docker rm steamcmd
         echo -e "${Green}幻兽帕鲁存档及配置已成功导入！${Font}"
     else
@@ -198,7 +198,7 @@ export_pal_server(){
         echo -e "${Green}导出的幻兽帕鲁存档及配置文件将会存放在 /data/palworld 目录下！${Font}"
         echo -e "${Green}开始导出幻兽帕鲁存档及配置...${Font}"
         mkdir -p /data/palworld
-        docker cp steamcmd:/home/steam/Steam/steamapps/common/PalServer/Pal/Saved/ /data/palworld
+        docker cp steamcmd:/home/steam/Steam/steamapps/common/PalServer/Pal/Saved/ /data/palworld/Saved/ 
         echo -e "${Green}幻兽帕鲁存档及配置已成功导出！${Font}"
     else
         echo -e "${Red}幻兽帕鲁服务端不存在，导出失败！${Font}"
