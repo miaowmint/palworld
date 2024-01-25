@@ -89,6 +89,7 @@ modify_config(){
         read -p "例如配置文件URL为 https://www.xuehaiwu.com/Pal/configs/config_1706097640.txt ，则输入1706097640 " iniid
         if [ -n "$iniid" ]; then
             curl -o /data/palworld/PalWorldSettings.ini https://www.xuehaiwu.com/Pal/configs/config_${iniid}.txt
+            chmod -R 777 /data/palworld/
         fi
         if [ -f /data/palworld/PalWorldSettings.ini ]; then
             echo -e "${Green}开始修改服务端配置...${Font}"
