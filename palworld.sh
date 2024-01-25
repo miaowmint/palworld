@@ -32,7 +32,7 @@ install_docker(){
         echo -e "${Green}Docker 已安装，进行下一步.${Font}"
     else
         echo -e "${Green}Docker 未安装，正在为您安装...${Font}"
-        curl -fsSL https://get.docker.com | bash -s docker
+        curl -fsSL https://get.docker.com | bash -s docker 
         echo -e "${Green}Docker 安装成功！${Font}"
     fi
 }
@@ -186,7 +186,8 @@ import_pal_server(){
     if [ $(docker ps -a -q -f name=steamcmd) ]; then
         read -p "请将幻兽帕鲁存档及配置(Saved)文件夹放入 /data/palworld 目录，然后回车继续" import
         echo -e "${Green}开始导入幻兽帕鲁存档及配置...${Font}"
-        docker cp /data/palworld/Saved/ steamcmd:/home/steam/Steam/steamapps/common/PalServer/Pal/
+        chmod -R 777 /data/palworld/
+        docker cp -a /data/palworld/Saved/ steamcmd:/home/steam/Steam/steamapps/common/PalServer/Pal/
         echo -e "${Green}开始重启幻兽帕鲁服务端...${Font}"
         docker restart steamcmd
         echo -e "${Green}幻兽帕鲁服务端已成功重启！${Font}"
@@ -210,6 +211,64 @@ export_pal_server(){
     fi
 }
 
+#在容器内更新
+update_in_container(){
+    if [ $(docker ps -a -q -f name=steamcmd) ]; then
+        readread -p "请注意，此操作会自动进行存档备份，会覆盖之前导出的存档，按回车键继续，输入任何内容退出脚本: " continue_update
+        if [ -n "$continue_update" ]; then
+            echo "退出脚本"
+            exit
+        else       
+            echo -e "${Green}开始备份${Font}"
+            echo -e "${Green}备份的幻兽帕鲁存档及配置将会存放在 /data/palworld 目录下！${Font}"
+            echo -e "${Green}开始导出幻兽帕鲁存档及配置...${Font}"
+            mkdir -p /data/palworld
+            docker cp steamcmd:/home/steam/Steam/steamapps/common/PalServer/Pal/Saved/ /data/palworld/
+            echo -e "${Green}幻兽帕鲁存档及配置已成功导出！${Font}"
+            echo -e "${Green}开始更新...${Font}"
+            docker exec -it steamcmd bash -c "/home/steam/steamcmd/steamcmd.sh +login anonymous +app\_update 2394010 validate +quit"
+            if [ $? -eq 0 ]; then
+                echo "更新应该是成功了，如果有问题请到腾讯云社区的文章评论下反馈 https://cloud.tencent.com/developer/article/2383539 "
+            else
+                echo "更新可能失败了，如果是网络的原因就重试一次，如果是其他问题请到腾讯云社区的文章评论下反馈 https://cloud.tencent.com/developer/article/2383539 "
+            fi
+        fi
+    else
+        echo -e "${Red}幻兽帕鲁服务端不存在，更新失败！${Font}"
+    fi
+}
+
+#使用watchtower更新
+update_with_watchtower(){
+     if [ $(docker ps -a -q -f name=steamcmd) ]; then
+        readread -p "请注意，此操作会自动进行存档备份，会覆盖之前导出的存档，按回车键继续，输入任何内容退出脚本: " continue_update2
+        if [ -n "$continue_update2" ]; then
+            echo "退出脚本"
+            exit
+        else       
+            echo -e "${Green}开始备份${Font}"
+            echo -e "${Green}备份的幻兽帕鲁存档及配置将会存放在 /data/palworld 目录下！${Font}"
+            echo -e "${Green}开始导出幻兽帕鲁存档及配置...${Font}"
+            mkdir -p /data/palworld
+            docker cp steamcmd:/home/steam/Steam/steamapps/common/PalServer/Pal/Saved/ /data/palworld/
+            echo -e "${Green}幻兽帕鲁存档及配置已成功导出！${Font}"
+            echo -e "${Green}开始更新...${Font}"
+            docker run --rm -v /var/run/docker.sock:/var/run/docker.sock containrrr/watchtower --cleanup --run-once steamcmd
+            sleep 2s
+            echo -e "${Green}镜像更新完成，开始导入备份的存档${Font}"
+            chmod -R 777 /data/palworld/
+            docker cp -a /data/palworld/Saved/ steamcmd:/home/steam/Steam/steamapps/common/PalServer/Pal/
+            echo -e "${Green}开始重启幻兽帕鲁服务端...${Font}"
+            docker restart steamcmd
+            echo -e "${Green}幻兽帕鲁服务端已成功重启！${Font}"
+            echo -e "${Green}幻兽帕鲁存档及配置已成功导入！${Font}"
+            echo -e "${Green}应该是更新成功了，快去试试能否登录吧，如果有问题请到腾讯云社区的文章评论下反馈 https://cloud.tencent.com/developer/article/2383539 ${Font}"
+        fi
+    else
+        echo -e "${Red}幻兽帕鲁服务端不存在，导出失败！${Font}"
+    fi   
+}
+
 
 #开始菜单
 main(){
@@ -217,7 +276,7 @@ root_need
 ovz_no
 install_docker
 clear
-echo -e "———————————————————————————————————————v20230125190000"
+echo -e "———————————————————————————————————————v20230125215010"
 echo -e "${Red}由于此脚本为赶工做出的，如发现脚本有任何bug或逻辑问题或改进方案，请发邮件到 cat@acat.email 联系我${Font}"
 echo -e "———————————————————————————————————————"
 echo -e "${Red}除非需要更新管理脚本，否则后续管理幻兽帕鲁服务端，只需要在命令行输入\033[32m palworld \033[0m即可${Font}"
@@ -233,8 +292,10 @@ echo -e "${Green}8、导入幻兽帕鲁存档及配置${Font}"
 echo -e "${Green}9、导出幻兽帕鲁存档及配置${Font}"
 echo -e "${Green}10、查看幻兽帕鲁服务端状态${Font}"
 echo -e "${Green}11、删除幻兽帕鲁服务端${Font}"
+echo -e "${Green}12、查看幻兽帕鲁服务端状态${Font}"
+echo -e "${Green}13、删除幻兽帕鲁服务端${Font}"
 echo -e "———————————————————————————————————————"
-read -p "请输入数字 [1-11]:" num
+read -p "请输入数字 [1-13]:" num
 case "$num" in
     1)
     install_pal_server
@@ -269,9 +330,15 @@ case "$num" in
     11)
     delete_pal_server
     ;;
+    12)
+    update_in_container
+    ;;
+    13)
+    update_with_watchtower
+    ;;
     *)
     clear
-    echo -e "${Green}请输入正确数字 [1-11]${Font}"
+    echo -e "${Green}请输入正确数字 [1-13]${Font}"
     sleep 2s
     main
     ;;
