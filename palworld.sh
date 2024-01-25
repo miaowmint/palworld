@@ -136,14 +136,14 @@ add_restart(){
         read -p "请输入数字 [1-3]:" num
         case "$num" in
             1)
-            echo "0 5 * * * docker start steamcmd" >> /etc/crontab
+            echo "0 5 * * * docker restart steamcmd" >> /etc/crontab
             ;;
             2)
-            echo "0 */12 * * * docker start steamcmd" >> /etc/crontab
+            echo "0 */12 * * * docker restart steamcmd" >> /etc/crontab
             ;;
             3)
             read -p "请输入定时重启的cron表达式:" cron
-            echo "$cron docker start steamcmd" >> /etc/crontab
+            echo "$cron docker restart steamcmd" >> /etc/crontab
             ;;
             *)
             echo -e "${Red}请输入正确数字 [1-3]${Font}"
@@ -160,7 +160,7 @@ add_restart(){
 restart_pal_server(){
     if [ $(docker ps -a -q -f name=steamcmd) ]; then
         echo -e "${Green}开始重启幻兽帕鲁服务端...${Font}"
-        docker start steamcmd
+        docker restart steamcmd
         echo -e "${Green}幻兽帕鲁服务端已成功重启！${Font}"
     else
         echo -e "${Red}幻兽帕鲁服务端不存在，重启失败！${Font}"
