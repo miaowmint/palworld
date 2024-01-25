@@ -14,6 +14,7 @@ echo '|_| |_| |_|_|\__,_|\___/ \_/\_/ |_| |_| |_|_|_| |_|\__|'
 echo '                                                       '
 
 echo "此脚本在来自 https://www.xuehaiwu.com/palworld-server/ 的脚本的基础上进行修改"    
+sleep 1s
 echo "感谢腾讯云提供的测试服务器"    
 
 if ! command -v curl &> /dev/null; then
@@ -27,5 +28,9 @@ fi
 mkdir -p /usr/local/sh && curl -o /usr/local/sh/palworld.sh https://raw.githubusercontent.com/miaowmint/palworld/main/palworld.sh
 
 ln -s /usr/local/sh/palworld.sh /usr/local/bin/palworld && chmod +x /usr/local/bin/palworld
+
+sleep 3s
+
+echo "后续管理幻兽帕鲁服务端无需重新运行此脚本，只需要在命令行输入 palworld 即可"
 
 palworld
