@@ -86,7 +86,7 @@ check_pal_server_status(){
 modify_config(){
     if [ $(docker ps -a -q -f name=steamcmd) ]; then
         echo -e "${Green}请前往 https://www.xuehaiwu.com/Pal/ （原脚本作者的网站）进行配置，并输入配置文件ID${Font}"
-        read -p "例如配置文件URL为 https://www.xuehaiwu.com/Pal/configs/config_1706097640.txt ，则输入1706097640" iniid
+        read -p "例如配置文件URL为 https://www.xuehaiwu.com/Pal/configs/config_1706097640.txt ，则输入1706097640 " iniid
         if [ -n "$iniid" ]; then
             curl -o /data/palworld/PalWorldSettings.ini https://www.xuehaiwu.com/Pal/configs/config_${iniid}.txt
         fi
