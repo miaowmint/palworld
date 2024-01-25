@@ -29,8 +29,8 @@ mkdir -p /usr/local/sh && curl -o /usr/local/sh/palworld.sh https://raw.githubus
 
 ln -s /usr/local/sh/palworld.sh /usr/local/bin/palworld && chmod +x /usr/local/bin/palworld
 
-sleep 3s
-
 echo "后续管理幻兽帕鲁服务端无需重新运行此脚本，只需要在命令行输入 palworld 即可"
+
+sleep 3s
 
 palworld
