@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/bash                                                  '
 
 echo -e "${Red}由于此脚本为赶工做出的，如发现脚本有任何bug或逻辑问题或改进方案，请发邮件到 cat@acat.email 联系我${Font}"
 
@@ -82,11 +82,11 @@ check_pal_server_status(){
 #修改服务端配置
 modify_config(){
     if [ $(docker ps -a -q -f name=steamcmd) ]; then
-        if [ -f ./PalWorldSettings.ini ]; then   1706097640
-            echo -e "${Green}请前往 https://www.xuehaiwu.com/Pal/ （原脚本作者的网站）进行配置，并输入配置文件ID${Font}"
-            read -p "例如配置文件URL为 https://www.xuehaiwu.com/Pal/configs/config_1706097640.txt ，则输入1706097640" iniid
-            if [ -n "$iniid" ]; then
-                curl -o /data/palworld/PalWorldSettings.ini https://www.xuehaiwu.com/Pal/configs/config_${iniid}.txt
+        echo -e "${Green}请前往 https://www.xuehaiwu.com/Pal/ （原脚本作者的网站）进行配置，并输入配置文件ID${Font}"
+        read -p "例如配置文件URL为 https://www.xuehaiwu.com/Pal/configs/config_1706097640.txt ，则输入1706097640" iniid
+        if [ -n "$iniid" ]; then
+            curl -o /data/palworld/PalWorldSettings.ini https://www.xuehaiwu.com/Pal/configs/config_${iniid}.txt
+        if [ -f /data/palworld/PalWorldSettings.ini ]; then
             echo -e "${Green}开始修改服务端配置...${Font}"
             docker cp /data/palworld/PalWorldSettings.ini steamcmd:/home/steam/Steam/steamapps/common/PalServer/Pal/Saved/Config/LinuxServer/
             echo -e "${Green}服务端配置已成功修改！服务端重启后生效！${Font}"
@@ -215,7 +215,7 @@ echo -e "${Green}4、修改服务端配置（我猜会有bug）${Font}"
 echo -e "${Green}5、增加swap内存${Font}"
 echo -e "${Green}6、增加定时重启${Font}"
 echo -e "${Green}7、重启幻兽帕鲁服务端${Font}"
-echo -e "${Green}8、导入幻兽帕鲁存档及配置（我猜会有bug）${Font}"
+echo -e "${Green}8、导入幻兽帕鲁存档及配置${Font}"
 echo -e "${Green}9、导出幻兽帕鲁存档及配置${Font}"
 echo -e "${Green}10、查看幻兽帕鲁服务端状态${Font}"
 echo -e "${Green}11、删除幻兽帕鲁服务端${Font}"
