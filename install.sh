@@ -30,7 +30,7 @@ mkdir -p /usr/local/sh && curl -o /usr/local/sh/palworld.sh https://raw.githubus
 
 ln -s /usr/local/sh/palworld.sh /usr/local/bin/palworld && chmod +x /usr/local/bin/palworld
 
-echo -e "后续管理幻兽帕鲁服务端无需重新运行此脚本，只需要在命令行输入\033[32m palworld \033[0m即可"
+echo -e "除非需要更新管理脚本，否则后续管理幻兽帕鲁服务端，只需要在命令行输入\033[32m palworld \033[0m即可"
 
 sleep 5s
 
