@@ -135,14 +135,14 @@ add_restart(){
         read -p "请输入数字 [1-3]:" num
         case "$num" in
             1)
-            echo "0 5 * * * cd $(pwd) && ./restart.sh" >> /etc/crontab
+            echo "0 5 * * * docker start steamcmd" >> /etc/crontab
             ;;
             2)
-            echo "0 */12 * * * cd $(pwd) && ./restart.sh" >> /etc/crontab
+            echo "0 */12 * * * docker start steamcmd" >> /etc/crontab
             ;;
             3)
             read -p "请输入定时重启的cron表达式:" cron
-            echo "$cron cd $(pwd) && ./restart.sh" >> /etc/crontab
+            echo "$cron docker start steamcmd" >> /etc/crontab
             ;;
             *)
             echo -e "${Red}请输入正确数字 [1-3]${Font}"
@@ -181,10 +181,10 @@ delete_pal_server(){
 #导入幻兽帕鲁存档及配置
 import_pal_server(){
     if [ $(docker ps -a -q -f name=steamcmd) ]; then
-        read -p "请将幻兽帕鲁存档及配置文件放入 /data/palworld 目录" import
+        read -p "请将幻兽帕鲁存档及配置文件放入 /data/palworld 目录，然后回车继续" import
         echo -e "${Green}开始导入幻兽帕鲁存档及配置...${Font}"
         docker cp /data/palworld/Saved/ steamcmd:/home/steam/Steam/steamapps/common/PalServer/Pal/Saved/ 
-        docker rm steamcmd
+        restart_pal_server
         echo -e "${Green}幻兽帕鲁存档及配置已成功导入！${Font}"
     else
         echo -e "${Red}幻兽帕鲁服务端不存在，导入失败！${Font}"
@@ -198,7 +198,7 @@ export_pal_server(){
         echo -e "${Green}导出的幻兽帕鲁存档及配置文件将会存放在 /data/palworld 目录下！${Font}"
         echo -e "${Green}开始导出幻兽帕鲁存档及配置...${Font}"
         mkdir -p /data/palworld
-        docker cp steamcmd:/home/steam/Steam/steamapps/common/PalServer/Pal/Saved/ /data/palworld/Saved/ 
+        docker cp steamcmd:/home/steam/Steam/steamapps/common/PalServer/Pal/Saved/ /data/palworld/Saved/
         echo -e "${Green}幻兽帕鲁存档及配置已成功导出！${Font}"
     else
         echo -e "${Red}幻兽帕鲁服务端不存在，导出失败！${Font}"
@@ -215,12 +215,12 @@ clear
 echo -e "———————————————————————————————————————"
 echo -e "${Red}由于此脚本为赶工做出的，如发现脚本有任何bug或逻辑问题或改进方案，请发邮件到 cat@acat.email 联系我${Font}"
 echo -e "———————————————————————————————————————"
-echo -e "${Red}如果需要重新唤起此脚本，只需要在命令行输入 palworld 即可${Font}"
+echo -e "${Red}后续管理幻兽帕鲁服务端，只需要在命令行输入\033[32m palworld \033[0m即可${Font}"
 echo -e "———————————————————————————————————————"
 echo -e "${Green}1、安装幻兽帕鲁服务端${Font}"
 echo -e "${Green}2、启动幻兽帕鲁服务端${Font}"
 echo -e "${Green}3、停止幻兽帕鲁服务端${Font}"
-echo -e "${Green}4、修改服务端配置（我猜会有bug）${Font}"
+echo -e "${Green}4、修改服务端配置${Font}"
 echo -e "${Green}5、增加swap内存${Font}"
 echo -e "${Green}6、增加定时重启${Font}"
 echo -e "${Green}7、重启幻兽帕鲁服务端${Font}"
@@ -229,7 +229,7 @@ echo -e "${Green}9、导出幻兽帕鲁存档及配置${Font}"
 echo -e "${Green}10、查看幻兽帕鲁服务端状态${Font}"
 echo -e "${Green}11、删除幻兽帕鲁服务端${Font}"
 echo -e "———————————————————————————————————————"
-read -p "请输入数字 [1-9]:" num
+read -p "请输入数字 [1-11]:" num
 case "$num" in
     1)
     install_pal_server
