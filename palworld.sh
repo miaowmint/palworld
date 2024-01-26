@@ -32,7 +32,7 @@ install_docker(){
         echo -e "${Green}Docker 已安装，进行下一步.${Font}"
     else
         echo -e "${Green}Docker 未安装，正在为您安装...${Font}"
-        curl -fsSL https://get.docker.com | bash -s docker 
+        curl -fsSL https://get.docker.com | bash -s docker
         echo -e "${Green}Docker 安装成功！${Font}"
     fi
 }
@@ -272,6 +272,10 @@ update_with_watchtower(){
     fi   
 }
 
+#更新管理面板
+update_sh(){
+    curl -o palinstall.sh https://blog.iloli.love/install.sh && chmod +x palinstall.sh && bash palinstall.sh
+}
 
 #开始菜单
 main(){
@@ -279,11 +283,14 @@ root_need
 ovz_no
 install_docker
 clear
-echo -e "———————————————————————————————————————v20230125_220715"
+echo -e "———————————————————————————————————————v20230126_133000"
 echo -e "${Red}由于此脚本为赶工做出的，如发现脚本有任何bug或逻辑问题或改进方案，请发邮件到 cat@acat.email 联系我${Font}"
 echo -e "———————————————————————————————————————"
-echo -e "${Red}除非需要更新管理脚本，否则后续管理幻兽帕鲁服务端，只需要在命令行输入\033[32m palworld \033[0m即可${Font}"
+echo -e "${Red}后续管理幻兽帕鲁服务端，只需要在命令行输入\033[32m palworld \033[0m即可${Font}"
 echo -e "———————————————————————————————————————"
+echo -e "推荐使用腾讯云服务器搭建，通过专属活动购买 4核16G 服务器，首月仅需 66 ，链接: https://curl.qcloud.com/UhCol3eZ "
+echo -e "———————————————————————————————————————"
+echo -e "${Green}0、更新管理面板${Font}"
 echo -e "${Green}1、安装幻兽帕鲁服务端${Font}"
 echo -e "${Green}2、启动幻兽帕鲁服务端${Font}"
 echo -e "${Green}3、停止幻兽帕鲁服务端${Font}"
@@ -297,10 +304,13 @@ echo -e "${Green}10、查看幻兽帕鲁服务端状态${Font}"
 echo -e "${Green}11、删除幻兽帕鲁服务端${Font}"
 echo -e "${Green}12、在容器内直接更新${Font}"
 echo -e "${Green}13、使用watchtower更新镜像的方式更新${Font}"
-echo -e "${Green}tips: 12 13任选其一即可，可能存在未知的bug，如遇到请反馈；通过 12 更新非常可能会遇到网络不好的问题；通过13更新可能由于会导出导入存档遇到未知的bug${Font}"
+echo -e "${Green}tips: 12 13任选其一即可，可能存在未知的bug，如遇到请反馈；通过 12 更新可能会遇到网络不好的问题，需要多试几次；通过13更新可能由于会导出导入存档遇到未知的bug${Font}"
 echo -e "———————————————————————————————————————"
-read -p "请输入数字 [1-13]:" num
+read -p "请输入数字 [0-13]:" num
 case "$num" in
+    0)
+    update_sh
+    ;;
     1)
     install_pal_server
     ;;
@@ -342,7 +352,7 @@ case "$num" in
     ;;
     *)
     clear
-    echo -e "${Green}请输入正确数字 [1-13]${Font}"
+    echo -e "${Green}请输入正确数字 [0-13]${Font}"
     sleep 2s
     main
     ;;
