@@ -17,6 +17,12 @@ echo "此脚本在来自 https://www.xuehaiwu.com/palworld-server/ 的脚本的�
 sleep 3s  
 echo "感谢腾讯云提供的测试服务器"    
 
+
+if [[ $EUID -ne 0 ]]; then
+    echo -e "${Red}请使用root权限运行此脚本，具体命令为 sudo -i ${Font}"
+    exit 1
+fi
+
 if ! command -v curl &> /dev/null; then
     echo "curl 未安装，正在使用 apt 安装..."
     sudo apt update
@@ -30,7 +36,7 @@ mkdir -p /usr/local/sh && curl -o /usr/local/sh/palworld.sh https://raw.githubus
 
 ln -s /usr/local/sh/palworld.sh /usr/local/bin/palworld && chmod +x /usr/local/bin/palworld
 
-echo -e "除非需要更新管理脚本，否则后续管理幻兽帕鲁服务端，只需要在命令行输入\033[32m palworld \033[0m即可"
+echo -e "后续管理幻兽帕鲁服务端，只需要在命令行输入\033[32m palworld \033[0m即可"
 
 sleep 5s
 
