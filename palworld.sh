@@ -88,11 +88,12 @@ modify_config(){
         echo -e "${Green}请前往 https://www.xuehaiwu.com/Pal/ （原脚本作者的网站）进行配置，并输入配置文件ID${Font}"
         read -p "例如配置文件URL为 https://www.xuehaiwu.com/Pal/configs/config_1706097640.txt ，则输入1706097640 " iniid
         if [ -n "$iniid" ]; then
+            mkdir -p /data/palworld
             curl -o /data/palworld/PalWorldSettings.ini https://www.xuehaiwu.com/Pal/configs/config_${iniid}.txt
-            chmod -R 777 /data/palworld/
         fi
         if [ -f /data/palworld/PalWorldSettings.ini ]; then
             echo -e "${Green}开始修改服务端配置...${Font}"
+            chmod -R 777 /data/palworld/
             docker cp /data/palworld/PalWorldSettings.ini steamcmd:/home/steam/Steam/steamapps/common/PalServer/Pal/Saved/Config/LinuxServer/
             echo -e "${Green}服务端配置已成功修改！服务端重启后生效！${Font}"
             echo -e "${Green}开始重启幻兽帕鲁服务端...${Font}"
@@ -283,7 +284,7 @@ root_need
 ovz_no
 install_docker
 clear
-echo -e "———————————————————————————————————————v20230126_133000"
+echo -e "———————————————————————————————————————v20230126_192100"
 echo -e "${Red}由于此脚本为赶工做出的，如发现脚本有任何bug或逻辑问题或改进方案，请发邮件到 cat@acat.email 联系我${Font}"
 echo -e "———————————————————————————————————————"
 echo -e "${Red}后续管理幻兽帕鲁服务端，只需要在命令行输入\033[32m palworld \033[0m即可${Font}"
@@ -359,3 +360,4 @@ case "$num" in
     esac
 }
 main
+}
