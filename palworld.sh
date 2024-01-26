@@ -274,7 +274,7 @@ update_with_watchtower(){
 
 #更新管理面板
 update_sh(){
-    curl -o palinstall.sh https://blog.iloli.love/install.sh && chmod +x palinstall.sh && bash palinstall.sh
+    curl -o palinstall.sh https://raw.githubusercontent.com/miaowmint/palworld/main/install.sh && chmod +x palinstall.sh && bash palinstall.sh
 }
 
 #开始菜单
