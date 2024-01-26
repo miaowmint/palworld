@@ -1,0 +1,10 @@
+FROM cm2network/steamcmd:latest
+EXPOSE 8211
+
+WORKDIR /home/steam/steamcmd/
+
+RUN /home/steam/steamcmd/steamcmd.sh +login anonymous +app\_update 2394010 validate +quit
+
+COPY ./PalServer-Linux-Test /home/steam/Steam/steamapps/common/PalServer/Pal/Binaries/Linux/PalServer-Linux-Test
+
+CMD /home/steam/Steam/steamapps/common/PalServer/PalServer.sh
