@@ -360,4 +360,3 @@ case "$num" in
     esac
 }
 main
-}
