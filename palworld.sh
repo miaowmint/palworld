@@ -159,7 +159,8 @@ add_backup(){
     if [ $(docker ps -a -q -f name=steamcmd) ]; then
         echo -e "${Green}将会每10分钟进行一次备份，将上次备份打成压缩包，并导出新的备份，保留1008份备份即7天的备份${Font}"
         mkdir -p /data/palworld
-        curl -o /data/palworld/backup.sh https://raw.githubusercontent.com/miaowmint/palworld/main/backup.sh && chmod +x /data/palworld/backup.sh
+        curl -o /data/palworld/backup.sh https://raw.githubusercontent.com/miaowmint/palworld/main/backup.sh
+        chmod +x /data/palworld/backup.sh
         echo "*/10 * * * * /bin/bash /data/palworld/backup.sh" >> /etc/crontab
         echo -e "${Green}定时备份已成功增加！${Font}"
     else
