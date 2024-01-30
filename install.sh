@@ -14,7 +14,7 @@ echo '|_| |_| |_|_|\__,_|\___/ \_/\_/ |_| |_| |_|_|_| |_|\__|'
 echo '                                                       '
 
 echo "此脚本在来自 https://www.xuehaiwu.com/palworld-server/ 的脚本的基础上进行修改"  
-sleep 3s  
+sleep 1s  
 echo "感谢腾讯云提供的测试服务器"    
 
 
