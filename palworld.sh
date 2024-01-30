@@ -1,6 +1,5 @@
 #!/bin/bash
 
-
 #  _ __ ___ (_) __ _  _____      ___ __ ___ (_)_ __ | |_ 
 # | '_ ` _ \| |/ _` |/ _ \ \ /\ / / '_ ` _ \| | '_ \| __|
 # | | | | | | | (_| | (_) \ V  V /| | | | | | | | | | |_ 
@@ -9,19 +8,12 @@
 Green="\033[32m"
 Font="\033[0m"
 Red="\033[31m" 
+version="v20230130_162530"
 
 #root权限
 root_need(){
     if [[ $EUID -ne 0 ]]; then
         echo -e "${Red}请使用root权限运行此脚本，具体指令为 sudo -i ${Font}"
-        exit 1
-    fi
-}
-
-#检测ovz
-ovz_no(){
-    if [[ -d "/proc/vz" ]]; then
-        echo -e "${Red}不支持OpenVZ虚拟化VPS${Font}"
         exit 1
     fi
 }
@@ -92,6 +84,9 @@ modify_config(){
             curl -o /data/palworld/PalWorldSettings.ini https://www.xuehaiwu.com/Pal/configs/config_${iniid}.txt
         fi
         if [ -f /data/palworld/PalWorldSettings.ini ]; then
+            echo -e "${Green}开始停止幻兽帕鲁服务端...${Font}"
+            docker stop steamcmd
+            echo -e "${Green}幻兽帕鲁服务端已成功停止！${Font}"
             echo -e "${Green}开始修改服务端配置...${Font}"
             chmod -R 777 /data/palworld/
             docker cp /data/palworld/PalWorldSettings.ini steamcmd:/home/steam/Steam/steamapps/common/PalServer/Pal/Saved/Config/LinuxServer/
@@ -125,7 +120,7 @@ if [ $? -ne 0 ]; then
          cat /proc/swaps
          cat /proc/meminfo | grep Swap
 else
-    echo -e "${Red}swapfile已存在，swap设置失败${Font}"
+    echo -e "${Red}swapfile已存在，swap设置失败，请进行手动设置${Font}"
 fi
 }
 
@@ -139,14 +134,14 @@ add_restart(){
         read -p "请输入数字 [1-3]:" num
         case "$num" in
             1)
-            echo "0 5 * * * docker restart steamcmd" >> /etc/crontab
+            echo "0 5 * * * root docker restart steamcmd" >> /etc/crontab
             ;;
             2)
-            echo "0 */12 * * * docker restart steamcmd" >> /etc/crontab
+            echo "0 */12 * * * root docker restart steamcmd" >> /etc/crontab
             ;;
             3)
             read -p "请输入定时重启的cron表达式:" cron
-            echo "$cron docker restart steamcmd" >> /etc/crontab
+            echo "$cron root docker restart steamcmd" >> /etc/crontab
             ;;
             *)
             echo -e "${Red}请输入正确数字 [1-3]${Font}"
@@ -156,6 +151,19 @@ add_restart(){
         echo -e "${Green}定时重启已成功增加！${Font}"
     else
         echo -e "${Red}幻兽帕鲁服务端不存在，增加定时重启失败！${Font}"
+    fi
+}
+
+#增加定时备份
+add_backup(){
+    if [ $(docker ps -a -q -f name=steamcmd) ]; then
+        echo -e "${Green}将会每10分钟进行一次备份，将上次备份打成压缩包，并导出新的备份，保留1008份备份即7天的备份${Font}"
+        mkdir -p /data/palworld
+        curl -o /data/palworld/backup.sh https://raw.githubusercontent.com/miaowmint/palworld/main/backup.sh && chmod +x /data/palworld/backup.sh
+        echo "*/10 * * * * /bin/bash /data/palworld/backup.sh" >> /etc/crontab
+        echo -e "${Green}定时备份已成功增加！${Font}"
+    else
+        echo -e "${Red}幻兽帕鲁服务端不存在，增加定时备份失败！${Font}"
     fi
 }
 
@@ -177,6 +185,13 @@ delete_pal_server(){
         docker stop steamcmd
         docker rm steamcmd
         echo -e "${Green}幻兽帕鲁服务端已成功删除！${Font}"
+        read -p "是否删除容器镜像，直接回车为不删除，输入任意内容为删除" rmi
+        if [ -n "$rmi" ]; then
+            docker rmi miaowmint/palworld
+            echo -e "${Green}容器镜像已成功删除！${Font}"
+        else
+            echo -e "${Green}不删除容器镜像${Font}"
+        fi      
     else
         echo -e "${Red}幻兽帕鲁服务端不存在，删除失败！${Font}"
     fi
@@ -186,6 +201,9 @@ delete_pal_server(){
 import_pal_server(){
     if [ $(docker ps -a -q -f name=steamcmd) ]; then
         read -p "请将幻兽帕鲁存档及配置(Saved)文件夹放入 /data/palworld 目录，然后回车继续" import
+        echo -e "${Green}开始停止幻兽帕鲁服务端...${Font}"
+        docker stop steamcmd
+        echo -e "${Green}幻兽帕鲁服务端已成功停止！${Font}"
         echo -e "${Green}开始导入幻兽帕鲁存档及配置...${Font}"
         chmod -R 777 /data/palworld/
         docker cp -a /data/palworld/Saved/ steamcmd:/home/steam/Steam/steamapps/common/PalServer/Pal/
@@ -234,7 +252,7 @@ update_in_container(){
                 echo -e "${Green}幻兽帕鲁服务端已成功重启！${Font}"
                 echo "更新应该是成功了，如果有问题请到腾讯云社区的文章评论下反馈 https://cloud.tencent.com/developer/article/2383539 "
             else
-                echo "更新可能失败了，如果是网络的原因（出现Timeout字样）就重试一次，如果是其他问题请到腾讯云社区的文章评论下反馈 https://cloud.tencent.com/developer/article/2383539 "
+                echo "更新可能失败了，如果是网络的原因（出现Timeout字样）就多重试几次，如果是其他问题请到腾讯云社区的文章评论下反馈 https://cloud.tencent.com/developer/article/2383539 "
             fi
         fi
     else
@@ -259,7 +277,10 @@ update_with_watchtower(){
             echo -e "${Green}开始更新...${Font}"
             docker run --rm -v /var/run/docker.sock:/var/run/docker.sock containrrr/watchtower --cleanup --run-once steamcmd
             sleep 2s
-            echo -e "${Green}镜像更新完成，开始导入备份的存档${Font}"
+            echo -e "${Green}镜像更新完成，开始停止幻兽帕鲁服务端...${Font}"
+            docker stop steamcmd
+            echo -e "${Green}幻兽帕鲁服务端已成功停止！${Font}"
+            echo -e "${Green}开始导入备份的存档${Font}"
             chmod -R 777 /data/palworld/
             docker cp -a /data/palworld/Saved/ steamcmd:/home/steam/Steam/steamapps/common/PalServer/Pal/
             echo -e "${Green}开始重启幻兽帕鲁服务端...${Font}"
@@ -278,18 +299,29 @@ update_sh(){
     curl -o palinstall.sh https://raw.githubusercontent.com/miaowmint/palworld/main/install.sh && chmod +x palinstall.sh && bash palinstall.sh
 }
 
+#自动更新管理面板
+auto_update_sh(){   
+    newversion=$(curl https://raw.githubusercontent.com/miaowmint/palworld/main/version.txt)
+    if [ "$version" == "$newversion" ]; then
+        echo -e "${Green}当前版本为 $version，最新版本为 $newversion，无需更新！${Font}"
+    else
+        echo -e "${Green}当前版本为 $version，最新版本为 $newversion，开始更新！${Font}"
+        update_sh
+    fi
+}
+
 #开始菜单
 main(){
 root_need
-ovz_no
 install_docker
+auto_update_sh
 clear
-echo -e "———————————————————————————————————————v20230126_192100"
-echo -e "${Red}由于此脚本为赶工做出的，如发现脚本有任何bug或逻辑问题或改进方案，请发邮件到 cat@acat.email 联系我${Font}"
+echo -e "———————————————————————————————————————v20230130_162530"
+echo -e "${Red}如发现脚本有任何bug或逻辑问题或改进方案，请发邮件到 cat@acat.email 联系我${Font}"
 echo -e "———————————————————————————————————————"
 echo -e "${Red}后续管理幻兽帕鲁服务端，只需要在命令行输入\033[32m palworld \033[0m即可${Font}"
 echo -e "———————————————————————————————————————"
-echo -e "推荐使用腾讯云服务器搭建，通过专属活动购买 4核16G 服务器，首月仅需 66 ，链接: https://curl.qcloud.com/UhCol3eZ "
+echo -e "推荐使用腾讯云服务器搭建，通过专属活动购买 4核16G 服务器，首月仅需 32 元，链接: https://curl.qcloud.com/UhCol3eZ "
 echo -e "———————————————————————————————————————"
 echo -e "${Green}0、更新管理面板${Font}"
 echo -e "${Green}1、安装幻兽帕鲁服务端${Font}"
@@ -303,9 +335,8 @@ echo -e "${Green}8、导入幻兽帕鲁存档及配置${Font}"
 echo -e "${Green}9、导出幻兽帕鲁存档及配置${Font}"
 echo -e "${Green}10、查看幻兽帕鲁服务端状态${Font}"
 echo -e "${Green}11、删除幻兽帕鲁服务端${Font}"
-echo -e "${Green}12、在容器内直接更新${Font}"
-echo -e "${Green}13、使用watchtower更新镜像的方式更新${Font}"
-echo -e "${Green}tips: 12 13任选其一即可，可能存在未知的bug，如遇到请反馈；通过 12 更新可能会遇到网络不好的问题，需要多试几次；通过13更新可能由于会导出导入存档遇到未知的bug${Font}"
+echo -e "${Green}12、更新幻兽帕鲁服务端${Font}"
+echo -e "${Green}13、增加定时备份${Font}"
 echo -e "———————————————————————————————————————"
 read -p "请输入数字 [0-13]:" num
 case "$num" in
@@ -349,7 +380,7 @@ case "$num" in
     update_in_container
     ;;
     13)
-    update_with_watchtower
+    add_backup
     ;;
     *)
     clear
