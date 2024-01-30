@@ -8,7 +8,7 @@
 Green="\033[32m"
 Font="\033[0m"
 Red="\033[31m" 
-version="v20230130_162530"
+version="v20230130_181212"
 
 #root权限
 root_need(){
@@ -295,11 +295,6 @@ update_with_watchtower(){
     fi   
 }
 
-#更新管理面板
-update_sh(){
-    curl -o palinstall.sh https://raw.githubusercontent.com/miaowmint/palworld/main/install.sh && chmod +x palinstall.sh && bash palinstall.sh
-}
-
 #自动更新管理面板
 auto_update_sh(){   
     newversion=$(curl https://raw.githubusercontent.com/miaowmint/palworld/main/version.txt)
@@ -307,7 +302,7 @@ auto_update_sh(){
         echo -e "${Green}当前版本为 $version，最新版本为 $newversion，无需更新！${Font}"
     else
         echo -e "${Green}当前版本为 $version，最新版本为 $newversion，开始更新！${Font}"
-        update_sh
+        curl -o palinstall.sh https://raw.githubusercontent.com/miaowmint/palworld/main/install.sh && chmod +x palinstall.sh && bash palinstall.sh
     fi
 }
 
@@ -317,14 +312,14 @@ root_need
 install_docker
 auto_update_sh
 clear
-echo -e "———————————————————————————————————————v20230130_162530"
+echo -e "———————————————————————————————————————v20230130_181212"
 echo -e "${Red}如发现脚本有任何bug或逻辑问题或改进方案，请发邮件到 cat@acat.email 联系我${Font}"
 echo -e "———————————————————————————————————————"
 echo -e "${Red}后续管理幻兽帕鲁服务端，只需要在命令行输入\033[32m palworld \033[0m即可${Font}"
 echo -e "———————————————————————————————————————"
 echo -e "推荐使用腾讯云服务器搭建，通过专属活动购买 4核16G 服务器，首月仅需 32 元，链接: https://curl.qcloud.com/UhCol3eZ "
 echo -e "———————————————————————————————————————"
-echo -e "${Green}0、更新管理面板${Font}"
+echo -e "${Green}0、退出脚本${Font}"
 echo -e "${Green}1、安装幻兽帕鲁服务端${Font}"
 echo -e "${Green}2、启动幻兽帕鲁服务端${Font}"
 echo -e "${Green}3、停止幻兽帕鲁服务端${Font}"
@@ -342,7 +337,7 @@ echo -e "———————————————————————�
 read -p "请输入数字 [0-13]:" num
 case "$num" in
     0)
-    update_sh
+    exit 0
     ;;
     1)
     install_pal_server
