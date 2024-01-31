@@ -8,7 +8,7 @@
 Green="\033[32m"
 Font="\033[0m"
 Red="\033[31m" 
-version="v20230130_181212"
+version="v20230131_222222"
 
 #root权限
 root_need(){
@@ -312,7 +312,7 @@ root_need
 install_docker
 auto_update_sh
 clear
-echo -e "———————————————————————————————————————v20230130_181212"
+echo -e "———————————————————————————————————————v20230131_222222"
 echo -e "${Red}如发现脚本有任何bug或逻辑问题或改进方案，请发邮件到 cat@acat.email 联系我${Font}"
 echo -e "———————————————————————————————————————"
 echo -e "${Red}后续管理幻兽帕鲁服务端，只需要在命令行输入\033[32m palworld \033[0m即可${Font}"
@@ -332,7 +332,7 @@ echo -e "${Green}9、导出幻兽帕鲁存档及配置${Font}"
 echo -e "${Green}10、查看幻兽帕鲁服务端状态${Font}"
 echo -e "${Green}11、删除幻兽帕鲁服务端${Font}"
 echo -e "${Green}12、更新幻兽帕鲁服务端${Font}"
-echo -e "${Green}13、增加定时备份${Font}"
+echo -e "${Green}13、增加定时备份（暂时无法生效，请等待更新）${Font}"
 echo -e "———————————————————————————————————————"
 read -p "请输入数字 [0-13]:" num
 case "$num" in
