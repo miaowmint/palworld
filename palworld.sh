@@ -102,6 +102,32 @@ modify_config(){
     fi
 }
 
+modify_FPS(){
+    local fps_config='steamcmd:/home/steam/Steam/steamapps/common/PalServer/Pal/Saved/Config/LinuxServer/Engine.ini'
+    local bakup_path="/data/palworld/Engine.ini"
+    docker cp "${fps_config}"  "${bakup_path}"
+    local current_fps=$(grep "^NetServerMaxTickRate" ${bakup_path} | awk -F'=' '{print $2}')
+    if [[ "${current_fps}" == "" ]]; then
+        current_fps='60'
+    fi
+    echo -e "${Green}当前最高帧数(FPS)上限为: ${current_fps}${Font}"
+    read -p "请输入新帧数(FPS)上限:" number
+    if [[ ! ${number} =~ ^[0-9]+$ || ${number} -lt 60 ]]; then
+         echo -e "${Red}请输入大于60的自然数.${Font}"
+         rm -f "${bakup_path}"
+         exit 1
+    fi
+    cp "${bakup_path}" "${bakup_path}.backup"
+    sed -i '/^\[\/Script\/OnlineSubsystemUtils.IpNetDriver]/d' ${bakup_path}
+    sed -i '/^NetServerMaxTickRate/d' ${bakup_path}
+    echo -e "[/Script/OnlineSubsystemUtils.IpNetDriver]\nNetServerMaxTickRate = ${number}" >> ${bakup_path}
+    docker cp "${bakup_path}" "${fps_config}"
+    echo -e "${Green}服务端配置已成功修改！服务端重启后生效！${Font}"
+    echo -e "${Green}开始重启幻兽帕鲁服务端...${Font}"
+    docker restart steamcmd
+    echo -e "${Green}幻兽帕鲁服务端已成功重启！${Font}"
+}
+
 #增加swap内存
 add_swap(){
 echo -e "${Green}请输入需要添加的swap，单位为 G ，例如输入8则会添加8G的SWAP${Font}"
@@ -333,8 +359,9 @@ echo -e "${Green}10、查看幻兽帕鲁服务端状态${Font}"
 echo -e "${Green}11、删除幻兽帕鲁服务端${Font}"
 echo -e "${Green}12、更新幻兽帕鲁服务端${Font}"
 echo -e "${Green}13、增加定时备份${Font}"
+echo -e "${Green}14、修改客户端默认帧数上限${Font}"
 echo -e "———————————————————————————————————————"
-read -p "请输入数字 [0-13]:" num
+read -p "请输入数字 [0-14]:" num
 case "$num" in
     0)
     exit 0
@@ -378,9 +405,12 @@ case "$num" in
     13)
     add_backup
     ;;
+    14)
+    modify_FPS
+    ;;
     *)
     clear
-    echo -e "${Green}请输入正确数字 [0-13]${Font}"
+    echo -e "${Green}请输入正确数字 [0-14]${Font}"
     sleep 2s
     main
     ;;
