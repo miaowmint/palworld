@@ -161,7 +161,7 @@ add_backup(){
         mkdir -p /data/palworld
         curl -o /data/palworld/backup.sh https://raw.githubusercontent.com/miaowmint/palworld/main/backup.sh
         chmod +x /data/palworld/backup.sh
-        echo "*/10 * * * * /bin/bash /data/palworld/backup.sh" >> /etc/crontab
+        echo "*/10 * * * * root /bin/bash /data/palworld/backup.sh" >> /etc/crontab
         echo -e "${Green}定时备份已成功增加！${Font}"
     else
         echo -e "${Red}幻兽帕鲁服务端不存在，增加定时备份失败！${Font}"
@@ -332,7 +332,7 @@ echo -e "${Green}9、导出幻兽帕鲁存档及配置${Font}"
 echo -e "${Green}10、查看幻兽帕鲁服务端状态${Font}"
 echo -e "${Green}11、删除幻兽帕鲁服务端${Font}"
 echo -e "${Green}12、更新幻兽帕鲁服务端${Font}"
-echo -e "${Green}13、增加定时备份（暂时无法生效，请等待更新）${Font}"
+echo -e "${Green}13、增加定时备份${Font}"
 echo -e "———————————————————————————————————————"
 read -p "请输入数字 [0-13]:" num
 case "$num" in
